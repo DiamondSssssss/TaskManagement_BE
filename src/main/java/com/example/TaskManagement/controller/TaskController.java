@@ -36,11 +36,28 @@ public class TaskController {
         return ResponseEntity.ok(taskDtos);
     }
 
+    @GetMapping("/account/{accountId}") // New endpoint to get tasks by account ID
+    public ResponseEntity<List<TaskDto>> getTasksByAccountId(@PathVariable("accountId") UUID accountId) {
+        List<TaskDto> taskDtos = taskService.getTasksByAccountId(accountId);
+        return ResponseEntity.ok(taskDtos);
+    }
+
     @PutMapping("{id}")
     public ResponseEntity<TaskDto> updateTask(@RequestBody TaskDto taskDto,
                                               @PathVariable("id") UUID taskId) {
         return ResponseEntity.ok(taskService.updateTask(taskId, taskDto));
     }
+
+    @PutMapping("{id}/status")
+    public ResponseEntity<TaskDto> updateTaskStatus(@PathVariable("id") UUID taskId, @RequestBody Byte status) {
+        // Call the service to update the status
+        TaskDto updatedTask = taskService.updateTaskStatus(taskId, status);
+
+        // Return the updated TaskDto
+        return ResponseEntity.ok(updatedTask);
+    }
+
+
 
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteTask(@PathVariable("id") UUID taskId) {

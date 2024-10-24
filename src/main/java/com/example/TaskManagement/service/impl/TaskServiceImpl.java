@@ -63,6 +63,37 @@ public class TaskServiceImpl implements TaskService {
         Task updatedTask = taskRepository.save(task);
         return TaskMapper.toDto(updatedTask);
     }
+    public TaskDto updateTaskStatus(UUID taskId, Byte status) {
+        // Find the task or throw an exception if not found
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+
+        // Update the status
+        task.setStatus(status);
+
+        // Save the updated task
+        Task updatedTask = taskRepository.save(task);
+
+        // Convert the updated Task entity to a TaskDto and return it
+        return TaskMapper.toDto(updatedTask);
+    }
+
+    @Override
+    public List<TaskDto> getTasksByAccountId(UUID accountId) {
+        // Find the account to ensure it exists
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found with given Id: " + accountId));
+
+        // Fetch tasks associated with the found account
+        List<Task> tasks = taskRepository.findByAccountId(account); // Assuming you update this method to find by accountId
+
+        // Convert Task entities to TaskDto
+        return tasks.stream()
+                .map(TaskMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+
 
     @Override
     public void deleteTask(UUID taskId) {

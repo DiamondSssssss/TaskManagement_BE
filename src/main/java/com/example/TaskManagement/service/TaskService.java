@@ -13,7 +13,10 @@ public interface TaskService {
     TaskDto getTaskById(UUID id);
     List<TaskDto> getAllTasks();
 
+    List<TaskDto> getTasksByAccountId(UUID accountId);
+
     TaskDto updateTask(UUID taskId, TaskDto taskDto);
 
+    TaskDto updateTaskStatus(UUID taskId, Byte status);
     void deleteTask(UUID taskId);
 }
